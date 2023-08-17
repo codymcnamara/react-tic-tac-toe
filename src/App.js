@@ -53,9 +53,23 @@ function Board({xIsNext, squares, onPlay}) {
   );
 }
 
+function ToggleButton ({isDecending, onToggleClick}) {
+  let buttonDescription = isDecending ? 'Currently Decending, click to make ascending' : 'Currently Ascending, click to make decending' 
+  
+  return (
+    <button
+      className=""
+      onClick={onToggleClick}
+    >
+      {buttonDescription}
+    </button>
+  );
+}
+
 export default function Game() {
   const [history, setHistory] = useState([Array(9).fill(null)])
   const [currentMove, setCurrentMove] = useState(0);
+  const [isDecending, setIsDecending] = useState(false);
   const currentSquares = history[currentMove];
   let xIsNext = currentMove % 2 === 0;
    
@@ -69,23 +83,33 @@ export default function Game() {
     setCurrentMove(nextMove);
   }
 
-  const moves = history.map((squares, move) => {
-    let description;    
-    if (move === currentMove) {
+  function handleToggleClick(){
+    setIsDecending(!isDecending);
+  }
+
+  const moves = [];
+  history.forEach((squares, move) => {
+    let description;
+    if ( move === currentMove ) {
       description = 'You are at move #' + move;
-      return (  
-        <li key={move}>{description}</li>
-      )
     } else if (move > 0 ) {
       description = 'Go to move #' + move;
     } else {
       description = 'Go to game start';
     }
-    return (  
-      <li key={move}>
+
+    let moveElement;
+    if ( move === currentMove ) {
+      moveElement = (  
+        <li key={move}>{description}</li>
+      )
+    } else {
+      moveElement = (<li key={move}>
         <button onClick={()=>jumpTo(move)}>{description}</button>
-      </li>
-    )
+      </li>)
+    }
+
+    isDecending ? moves.unshift(moveElement) : moves.push(moveElement);
   })
 
 
@@ -96,6 +120,9 @@ export default function Game() {
       </div>
       <div className="game-info">
         <ol>{moves}</ol>
+      </div>
+      <div>
+        <ToggleButton isDecending={isDecending} onToggleClick={handleToggleClick} />
       </div>
     </div>
   );
