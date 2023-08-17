@@ -33,24 +33,22 @@ function Board({xIsNext, squares, onPlay}) {
     status = `Next Player: ${xIsNext ? "X" : "O"}`;
   }
 
+  // create 3 rows of 3 squares
+  const boardSize = 3;
+  let rowsOfSquares = [];
+  for (let i = 0; i < boardSize; i++ ){
+    let squareEls = [];
+    for (let j = 0; j < boardSize; j++ ){
+      let index = i * boardSize + j;
+      squareEls.push(<Square value={squares[index]} key={index} onSquareClick={() => handleClick(index)} />)
+    }
+    rowsOfSquares.push(<div className="board-row" key={i}>{squareEls}</div>);
+  } 
+
   return (
     <>
       <div className="status">{status}</div>
-      <div className="board-row">
-        <Square value={squares[0]} onSquareClick={() => handleClick(0)} />
-        <Square value={squares[1]} onSquareClick={() => handleClick(1)} />
-        <Square value={squares[2]} onSquareClick={() => handleClick(2)} />
-      </div>
-      <div className="board-row">
-        <Square value={squares[3]} onSquareClick={() => handleClick(3)} />
-        <Square value={squares[4]} onSquareClick={() => handleClick(4)} />
-        <Square value={squares[5]} onSquareClick={() => handleClick(5)} />
-      </div>
-      <div className="board-row">
-        <Square value={squares[6]} onSquareClick={() => handleClick(6)} />
-        <Square value={squares[7]} onSquareClick={() => handleClick(7)} />
-        <Square value={squares[8]} onSquareClick={() => handleClick(8)} />
-      </div>
+      {rowsOfSquares}
     </>
   );
 }
